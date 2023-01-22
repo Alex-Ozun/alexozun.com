@@ -81,23 +81,29 @@ Before writing code, let's capture requirements in the Type System:
 
 ### Use case 
 
-Let's say we are building the "Subscriptions" tab for YouTube mobile app, where user can be Anonymous or Signed-in.
+Let's say we are building a simple Log In experience.
 
-![You Tube](youtube.png)
+**Success**
+
+![You Tube](usecase-success.png)
 
 ```
-GIVEN User has entered email AND password.
+GIVEN User has entered email and password.
   AND Email is valid.
-  AND Password is longer than 8 characters.
+  AND Password is at least 8 characters long.
 WHEN User presses “Sign In” Button. 
   AND Sign In request succeeds.
-THEN Show Subscriptions video feed.
+THEN Show Home Screen.
 ```
 
+**Failure**
+
+![You Tube](usecase-failure.png)
+
 ```
-GIVEN User has entered email AND password.
+GIVEN User has entered email and password.
   AND Email is valid.
-  AND Password is longer than 8 characters.
+  AND Password is at least 8 characters long.
 WHEN User presses “Sign In” Button. 
   AND Sign In request fails.
 THEN Show error message.
@@ -107,11 +113,11 @@ THEN Show error message.
 
 ```swift
 func signInButtonAction() {
-  guard emailTextField.text.isValidEmail && passwordTextField.text.count > 8 else { 
+  guard emailField.text.isValidEmail && passwordField.text.count > 8 else { 
     return
   }
 
-  signIn(email: emailTextField.text, password: passwordTextField.text)
+  signIn(email: emailField.text, password: passwordField.text)
 }
 
 func signIn(email: String, password: String) {
@@ -122,6 +128,56 @@ func signIn(email: String, password: String) {
       showErrorMessage("Something went wrong")
     }
 }
+```
+
+But what if we unintentionally replaced `&&` with `||`? The program would still compile and run just fine, but we'd be able send Sign-in request even with one invalid field!
+
+```swift{3)
+func signInButtonAction() {
+  guard emailField.text.isValidEmail || passwordField.text.count > 8 else {
+    return
+  }
+
+  signIn(email: emailField.text, password: passwordField.text)
+}
+
+...
+```
+
+We can do better. 
+
+Let's look at the first three lines of requirements again:
+
+```
+1 GIVEN User has entered email and password.
+2  AND Email is valid.
+3  AND Password is at least 8 characters long.
+```
+
+`1` - Raw text in email and password text fields are simple `String` types.
+
+`2` - Valid email cannot be just an arbitrary string anymore, so we need a new strong type: `Email`.
+
+`3` - Valid password cannot be an arbitrary string either, so we need a new strong type: `Password`.
+
+
+
+```swift
+struct Email {}
+
+struct Password {}
+```
+
+Let's update the `signIn` function signature to use our new types:
+
+```swift{3}
+func signInButtonAction() { ... }
+
+func signIn(email: Email, password: Password) { ... }
+
+struct Email {}
+
+struct Password {}
 ```
 
 ### Step 2
