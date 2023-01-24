@@ -26,15 +26,15 @@ class Translations extends React.Component {
   render() {
     let { translations, lang, languageLink, editUrl } = this.props;
 
-    let readerTranslations = translations.filter(lang => lang !== 'ru');
-    let hasRussianTranslation = translations.indexOf('ru') !== -1;
+    let readerTranslations = translations.filter(lang => lang !== 'uk');
+    let hasUkrainianTranslation = translations.indexOf('uk') !== -1;
 
     return (
       <div className="translations">
         <Panel style={{ fontFamily: systemFont }}>
           {translations.length > 0 && (
             <span>
-              {hasRussianTranslation && (
+              {hasUkrainianTranslation && (
                 <span>
                   Originally written in:{' '}
                   {'en' === lang ? (
@@ -43,18 +43,22 @@ class Translations extends React.Component {
                     <Link to={languageLink('en')}>English</Link>
                   )}
                   {' • '}
-                  {'ru' === lang ? (
-                    <b>Русский (авторский перевод)</b>
+                  {'uk' === lang ? (
+                    <b>Українська (авторський переклад)</b>
                   ) : (
-                    <Link to={languageLink('ru')}>
-                      Русский (авторский перевод)
+                    <Link to={languageLink('uk')}>
+                      Українська (авторський переклад)
                     </Link>
                   )}
-                  <br />
-                  <br />
                 </span>
               )}
-              <span>Translated by readers into: </span>
+              {readerTranslations.length > 0 && (
+                    <span>
+                      <br />
+                      <br />
+                      Translated by readers into:&nbsp;
+                    </span>
+              )}
               {readerTranslations.map((l, i) => (
                 <React.Fragment key={l}>
                   {l === lang ? (
@@ -71,7 +75,7 @@ class Translations extends React.Component {
             <>
               <br />
               <br />
-              {lang !== 'ru' && (
+              {lang !== 'uk' && (
                 <>
                   <Link to={languageLink('en')}>Read the original</Link>
                   {' • '}
