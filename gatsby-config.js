@@ -5,7 +5,7 @@ module.exports = {
     description: 'Personal blog by Alex Ozun.',
     siteUrl: 'https://swiftology.io',
     social: {
-      twitter: '@dan_abramov',
+      twitter: '@alexozun',
     },
   },
   pathPrefix: '/',
