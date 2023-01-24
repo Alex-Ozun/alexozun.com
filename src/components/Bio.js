@@ -13,7 +13,7 @@ class Bio extends React.Component {
       >
         <img
           src={profilePic}
-          alt={`Dan Abramov`}
+          alt={`Alex Ozun`}
           style={{
             marginRight: rhythm(1 / 2),
             marginBottom: 0,
@@ -22,10 +22,10 @@ class Bio extends React.Component {
             borderRadius: '50%',
           }}
         />
-        <p style={{ maxWidth: 310 }}>
-          Personal blog by{' '}
-          <a href="https://mobile.twitter.com/dan_abramov">Dan Abramov</a>.{' '}
-          I&nbsp;explain with words and code.
+        <p style={{ maxWidth: 500 }}>
+          Advanced Swift | Functional Programming | Software Design 
+          Written by{' '}
+          <a href="https://github.com/Alex-Ozun">Alex Ozun</a>
         </p>
       </div>
     );

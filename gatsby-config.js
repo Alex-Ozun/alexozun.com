@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: 'Swiftology',
-    author: 'Dan Abramov',
-    description: 'Personal blog by Dan Abramov. I explain with words and code.',
+    author: 'Alex Ozun',
+    description: 'Personal blog by Alex Ozun.',
     siteUrl: 'https://swiftology.io',
     social: {
       twitter: '@dan_abramov',
