@@ -93,7 +93,7 @@ GIVEN User has entered email and password.
   AND Password is at least 8 characters long.
 WHEN User presses “Sign In” Button. 
   AND Sign In request succeeds.
-THEN Show Home Screen.
+THEN Show Main screen.
 ```
 
 **Failure**
@@ -109,10 +109,62 @@ WHEN User presses “Sign In” Button.
 THEN Show error message.
 ```
 
-### Step 1
+These requirements look simple enough, and we eagerly jump into coding. 
+Let's assume that we already have the UI laid out, and we also an Authorisation Client that can make Sign In requests for us. We just need to hook everything up.
+So we might start with a function `signIn` that takes `email` and `password` strings and passes them to our `authService`.
 
 ```swift
-func signInButtonAction() {
+func signIn(email: String, password: String) {
+  authService.signIn(email: email, password: password) { (isSuccess: Bool) in
+    // To Do
+  }
+}
+```
+Next, we might add `signInButtonTapped` function and call it on `Sign In` button's `touchUpInside` event.
+
+```swift{9-11}
+// DISCLAIMER: 
+// I'm using UIKit in these examples
+// but ideas I'm trying to convey here are applicable to SwiftUI too. 
+
+let signInButton: UIButton
+let emailField: UITextField
+let passwordField: UITextField
+
+@objc func signInButtonTapped(_ button: UIButton) {
+  signIn(email: emailField.text, password: passwordField.text)
+}
+
+func signIn(email: String, password: String) {
+  authService.signIn(email: email, password: password) { (isSuccess: Bool) in
+    // To Do
+  }
+}
+```
+
+Next, we need to make sure to validate `email` and `password` strings before we pass
+them to `signIn` function, as per requirements:
+
+```swift{2-4)
+@objc func signInButtonTapped(_ button: UIButton) {
+  guard emailField.text.isValidEmail && passwordField.text.count > 8 else { 
+    return
+  }
+
+  signIn(email: emailField.text, password: passwordField.text)
+}
+
+func signIn(email: String, password: String) {
+  authService.signIn(email: email, password: password) { (isSuccess: Bool) in
+    // To Do
+  }
+}
+```
+
+Finally, let's implement the completion handler of `authService.signIn` call
+
+```swift{11-15)
+@objc func signInButtonTapped(_ button: UIButton) {
   guard emailField.text.isValidEmail && passwordField.text.count > 8 else { 
     return
   }
@@ -127,12 +179,20 @@ func signIn(email: String, password: String) {
     } else {
       showErrorMessage("Something went wrong")
     }
+  }
 }
+
+func showSubscriptionVideos() {  /* irrelevant implementation details */ }
+func showErrorMessage(_ message: String) {  /* irrelevant implementation details */ }
 ```
+
+However naïve this code might look, it actually fulfils all requirements and is ready for deployment. 
+
+Of course, this article wouldn't make sense if we stopped here. So, let's discuss all the drawbacks and find improvements. 
 
 But what if we unintentionally replaced `&&` with `||`? The program would still compile and run just fine, but we'd be able send Sign-in request even with one invalid field!
 
-```swift{3)
+```swift{2)
 func signInButtonAction() {
   guard emailField.text.isValidEmail || passwordField.text.count > 8 else {
     return
